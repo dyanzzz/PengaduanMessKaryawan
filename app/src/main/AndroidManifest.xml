@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.home.pengaduanmesskaryawan">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+
+    <!-- <user-permission android:name="android.permission.READ_PHONE_STATE" /> -->
+
+
+    <!-- To auto-complete the email text field in the login form with the user's emails -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_PROFILE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+
+    <application
+        android:name=".config.AppController"
+        android:allowBackup="true"
+        android:fullBackupContent="@xml/backup_descriptor"
+        android:hardwareAccelerated="false"
+        android:icon="@mipmap/pengaduan_mess_karyawan"
+        android:label="@string/app_name"
+        android:largeHeap="true"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        tools:ignore="GoogleAppIndexingWarning">
+        <activity
+            android:name=".Login"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Profil"
+            android:label="@string/profil"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".InputKamar"
+            android:label="@string/input_kamar"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".DisplayKamar"
+            android:label="@string/daftar_kamar"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".InputPengaduan"
+            android:label="@string/input_pengaduan"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".DisplayPengaduan"
+            android:label="@string/display_pengaduan"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ProfilEdit"
+            android:label="@string/edit_profil"
+            android:screenOrientation="portrait"/>
+    </application>
+
+</manifest>

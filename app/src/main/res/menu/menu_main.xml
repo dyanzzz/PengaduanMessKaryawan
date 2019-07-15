@@ -1,0 +1,30 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.hyundaimobil.salesmanactivity.MainActivity">
+
+    <group
+        android:id="@+id/group1"
+        android:checkableBehavior="all">
+        <!--
+        <item
+            android:id="@+id/menuInbox"
+            android:icon="@drawable/inbox"
+            android:title="@string/inbox" />
+        -->
+
+        <item
+            android:id="@+id/menuProfil"
+            android:icon="@drawable/account"
+            android:title="Profil" />
+    </group>
+
+    <group
+        android:id="@+id/group2"
+        android:checkableBehavior="all">
+        <item
+            android:id="@+id/menuLogout"
+            android:icon="@drawable/exit"
+            android:title="Logout" />
+    </group>
+
+</menu>
