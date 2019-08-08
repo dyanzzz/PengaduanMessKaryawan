@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1006236120029",
+    "firebase_url": "https://pengaduankeluhan-77c3b.firebaseio.com",
+    "project_id": "pengaduankeluhan-77c3b",
+    "storage_bucket": "pengaduankeluhan-77c3b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1006236120029:android:59ac25cae9f0e26c",
+        "android_client_info": {
+          "package_name": "com.home.pengaduanmesskaryawan"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1006236120029-16j1ui7lht0puc1qa6uldcqpvav125dp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.home.pengaduanmesskaryawan",
+            "certificate_hash": "6c426cddbb901d7397f9dfcea7dc83dba86fcce9"
+          }
+        },
+        {
+          "client_id": "1006236120029-5recneclinup3iinti67fphuiqmejh0r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDWceUpETkyt5QJo7vSO06DFVRQl6uLv7Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1006236120029-5recneclinup3iinti67fphuiqmejh0r.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

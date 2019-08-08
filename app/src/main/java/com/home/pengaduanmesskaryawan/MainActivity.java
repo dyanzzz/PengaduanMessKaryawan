@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.home.pengaduanmesskaryawan.config.Config;
 import com.home.pengaduanmesskaryawan.config.SessionManager;
 
@@ -42,6 +43,8 @@ public class MainActivity extends AppCompatActivity {
         toolbar.inflateMenu(R.menu.menu_icon);
         toolbar.setLogo(R.mipmap.pengaduan_mess_karyawan);
         toolbar.setLogoDescription(R.string.app_name);
+
+        FirebaseMessaging.getInstance().subscribeToTopic("news");
 
         session = new SessionManager(getApplicationContext());
         String statusLogin = String.valueOf(session.isLoggedIn());
