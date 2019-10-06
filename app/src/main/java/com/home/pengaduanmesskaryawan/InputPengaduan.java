@@ -3,14 +3,20 @@ package com.home.pengaduanmesskaryawan;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Base64;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,6 +27,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
 
 public class InputPengaduan extends AppCompatActivity {
@@ -28,7 +37,20 @@ public class InputPengaduan extends AppCompatActivity {
     String strKdKamar, strKdUser, strKdTombol;
     TextView titleForm;
     EditText blokKamar, noKamar, nama, keluhan, kdKamar, kdUser;
-    Button btnSave, btnCancel;
+    Button btnSave, btnCancel, buttonChoose;
+
+    ImageView imageView;
+    Bitmap bitmap, decoded;
+    int success;
+    int PICK_IMAGE_REQUEST = 1;
+    int bitmap_size = 60; // range 1 - 100
+
+    String UPLOAD_URL = "http://10.0.2.2/android/upload_image/upload.php";
+    final String TAG_SUCCESS = "success";
+    final String TAG_MESSAGE = "message";
+    String KEY_IMAGE = "image";
+    String KEY_NAME = "name";
+    String tag_json_obj = "json_obj_req";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,13 +77,80 @@ public class InputPengaduan extends AppCompatActivity {
         titleForm       = findViewById(R.id.titleForm);
         btnSave         = findViewById(R.id.btnSave);
         btnCancel       = findViewById(R.id.btnCancel);
+        buttonChoose    = findViewById(R.id.buttonChoose);
+        imageView       = findViewById(R.id.imageView);
 
         if(Config.CEK_KONEKSI(InputPengaduan.this)) {
+
+            buttonChoose.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showFileChooser();
+                }
+            });
+
             getJSON();
         } else {
             Toast.makeText(InputPengaduan.this, Config.ALERT_MESSAGE_CONN_ERROR, Toast.LENGTH_SHORT).show();
             //Snackbar.make(recyclerView, Config.ALERT_MESSAGE_NO_CONN, Snackbar.LENGTH_LONG).setAction("Action", null).show();
         }
+    }
+
+    public String getStringImage(Bitmap bmp) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bmp.compress(Bitmap.CompressFormat.JPEG, bitmap_size, baos);
+        byte[] imageBytes = baos.toByteArray();
+        return Base64.encodeToString(imageBytes, Base64.DEFAULT);
+    }
+
+    private void showFileChooser() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            Uri filePath = data.getData();
+            try {
+                //mengambil fambar dari Gallery
+                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
+                // 512 adalah resolusi tertinggi setelah image di resize, bisa di ganti.
+                setToImageView(getResizedBitmap(bitmap, 512));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void setToImageView(Bitmap bmp) {
+        //compress image
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        bmp.compress(Bitmap.CompressFormat.JPEG, bitmap_size, bytes);
+        decoded = BitmapFactory.decodeStream(new ByteArrayInputStream(bytes.toByteArray()));
+
+        //menampilkan gambar yang dipilih dari camera/gallery ke ImageView
+        imageView.setImageBitmap(decoded);
+    }
+
+    // fungsi resize image
+    public Bitmap getResizedBitmap(Bitmap image, int maxSize) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+
+        float bitmapRatio = (float) width / (float) height;
+        if (bitmapRatio > 1) {
+            width = maxSize;
+            height = (int) (width / bitmapRatio);
+        } else {
+            height = maxSize;
+            width = (int) (height * bitmapRatio);
+        }
+        return Bitmap.createScaledBitmap(image, width, height, true);
     }
 
     private void getJSON(){
@@ -132,10 +221,14 @@ public class InputPengaduan extends AppCompatActivity {
             //Snackbar.make(v, Config.ALERT_KELUHAN, Snackbar.LENGTH_LONG).setAction("Action", null).show();
             keluhan.requestFocus();
 
+        //}else if(getStringImage(decoded) == null){
+            //Toast.makeText(InputPengaduan.this, Config.ALERT_IMAGE_NOT_FOUND, Toast.LENGTH_SHORT).show();
+            //Snackbar.make(v, Config.ALERT_KELUHAN, Snackbar.LENGTH_LONG).setAction("Action", null).show();
+            //keluhan.requestFocus();
         } else {
             @SuppressLint("StaticFieldLeak")
             class save extends AsyncTask<Void, Void, String> {
-                ProgressDialog loading;
+                private ProgressDialog loading;
 
                 @Override
                 protected void onPreExecute() {
@@ -160,6 +253,10 @@ public class InputPengaduan extends AppCompatActivity {
                     hashMap.put(Config.DISP_KD_USER, data_kdUser);
                     hashMap.put(Config.DISP_KELUHAN, data_keluhan);
                     hashMap.put(Config.DISP_KD_TOMBOL, "0");
+
+                    //menambah parameter yang di kirim ke web servis
+                    hashMap.put(KEY_IMAGE, getStringImage(decoded));
+
 
                     RequestHandler rh = new RequestHandler();
                     String s = rh.sendPostRequest(Config.URL_ACTION_KELUHAN, hashMap);
@@ -188,13 +285,10 @@ public class InputPengaduan extends AppCompatActivity {
     //controll tombol toolbar
     @Override
     public boolean onOptionsItemSelected(MenuItem menuItem) {
-        switch (menuItem.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-
-            default:
-                return super.onOptionsItemSelected(menuItem);
+        if (menuItem.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
         }
+        return super.onOptionsItemSelected(menuItem);
     }
 }

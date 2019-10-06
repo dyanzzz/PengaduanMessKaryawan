@@ -12,7 +12,9 @@ public class Config extends AppCompatActivity {
     //JSON
     public static final String TAG_JSON_ARRAY   = "result";
     public static final int
-            TAMPIL_ERROR = 1;
+            TAMPIL_ERROR = 1,
+            BLOK_KAMAR = 2,
+            USER = 3;
 
     //server
     //public static final String Server           = "http://192.168.43.125/pengaduan_keluhan/";
@@ -26,6 +28,9 @@ public class Config extends AppCompatActivity {
     public static final String URL_GET_KELUHAN              = Server + "daftarKeluhan.php";
     public static final String URL_ACTION_KELUHAN           = Server + "actionKeluhan.php";
     public static final String URL_GET_PROFIL               = Server + "profil.php";
+    public static final String URL_GET_BLOK_KAMAR           = Server + "getBlokKamar.php";
+    public static final String URL_GET_USER                 = Server + "getUsers.php";
+    public static final String URL_GET_REPORT_RESULT        = Server + "getReportResult.php";
 
 
     public static final String KEY_USERNAME                 = "username";
@@ -56,11 +61,16 @@ public class Config extends AppCompatActivity {
     public static final String ALERT_TANGGAL_LAHIR          = "* Mohon Input Tanggal Lahir";
     public static final String ALERT_ALAMAT                 = "* Mohon Input Alamat";
     public static final String ALERT_KELUHAN                = "* Mohon Input Keluhan";
+    public static final String ALERT_IMAGE_NOT_FOUND        = "* Image Not Found";
+
+    public static final String ALERT_DATE_FROM              = "* Mohon Input Date From";
+    public static final String ALERT_DATE_TO                = "* Mohon Input Date To";
 
     public static final String NOTIF_LOGOUT                 = "Are you sure want to Logout?";
     public static final String NOTIF_CONTACT_ADMIN          = "Please Contact Administrator.";
     public static final String HARUS_DIISI                  = "Form Input Cannot be Empty!!!";
     public static final String DISP_NOMOR                   = "nomor";
+    public static final String KEY_SEARCH                   = "search";
 
     //kamar
 
@@ -78,16 +88,20 @@ public class Config extends AppCompatActivity {
     public static final String DISP_KELUHAN                 = "keluhan";
     public static final String DISP_TANGGAL_KELUHAN         = "tanggalKeluhan";
     public static final String DISP_STATUS_KELUHAN          = "statusKeluhan";
+    public static final String DISP_IMAGE                   = "image";
     public static final String DISP_LEVEL_USER              = "levelUser";
     public static final String DISP_JUMLAH_KELUHAN_MENUNGGU = "menunggu";
     public static final String DISP_JUMLAH_KELUHAN_PROSES   = "proses";
     public static final String DISP_JUMLAH_KELUHAN_SELESAI  = "selesai";
+    public static final String DISP_FROM                    = "from";
+    public static final String DISP_TO                      = "to";
 
     public static final String DISP_KD_TOMBOL               = "kdTombol";
 
     public static final String TITLE_DISP_WILAYAH           = "Form Input Wilayah";
     public static final String TITLE_DISP_MASJID            = "Form Input Masjid";
     public static final String TITLE_DISP_KAJIAN            = "Form Input Kajian";
+
 
 
     public static final boolean CEK_KONEKSI(Context cek){

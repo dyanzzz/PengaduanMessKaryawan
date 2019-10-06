@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
         LinearLayout display_kamar      = findViewById(R.id.layout_display_kamar);
         LinearLayout input_pengaduan    = findViewById(R.id.layout_input_pengaduan);
         LinearLayout display_pengaduan  = findViewById(R.id.layout_display_pengaduan);
+        LinearLayout report             = findViewById(R.id.layout_display_report);
 
         if(access_level.equals("1")){
             input_pengaduan.setVisibility(View.GONE);
@@ -70,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
         if(access_level.equals("2")){
             input_kamar.setVisibility(View.GONE);
             display_kamar.setVisibility(View.GONE);
+            report.setVisibility(View.GONE);
         }
 
         //Initializing textview
@@ -172,6 +174,17 @@ public class MainActivity extends AppCompatActivity {
             intent.putExtra(Config.DISP_KD_USER, usercode);
             intent.putExtra(Config.DISP_KD_KAMAR, "0");
             intent.putExtra(Config.DISP_KD_TOMBOL, "all");
+            intent.putExtra(Config.DISP_LEVEL_USER, access_level);
+            startActivity(intent);
+        }else{
+            showDialog(Config.TAMPIL_ERROR);
+        }
+    }
+
+    public void layout_btn_display_report(View view) {
+        if(Config.CEK_KONEKSI(MainActivity.this)) {
+            Intent intent = new Intent(getApplicationContext(), Report.class);
+            intent.putExtra(Config.DISP_KD_USER, usercode);
             intent.putExtra(Config.DISP_LEVEL_USER, access_level);
             startActivity(intent);
         }else{

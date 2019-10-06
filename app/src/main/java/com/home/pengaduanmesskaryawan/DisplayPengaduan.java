@@ -5,18 +5,24 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.ceylonlabs.imageviewpopup.ImagePopup;
 import com.home.pengaduanmesskaryawan.adapter.TaskAdapterPengaduan;
 import com.home.pengaduanmesskaryawan.config.Config;
 import com.home.pengaduanmesskaryawan.config.RecyclerTouchListener;
@@ -39,6 +45,7 @@ public class DisplayPengaduan extends AppCompatActivity {
     private String JSON_STRING;
     SwipeRefreshLayout mSwipeRefreshLayout;
     AlertDialog.Builder dialog;
+    public String searchPublic = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +53,7 @@ public class DisplayPengaduan extends AppCompatActivity {
         setContentView(R.layout.activity_display_pengaduan);
 
         ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
         actionBar.setHomeButtonEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
@@ -65,6 +73,15 @@ public class DisplayPengaduan extends AppCompatActivity {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(mAdapter);
 
+        final ImagePopup imagePopup = new ImagePopup(this);
+        imagePopup.destroyDrawingCache();
+        imagePopup.clearFocus();
+        imagePopup.setBackgroundColor(Color.WHITE);
+//        imagePopup.setWindowHeight(800);
+//        imagePopup.setWindowWidth(800);
+        imagePopup.setHideCloseIcon(true);
+        imagePopup.setImageOnClickClose(true);
+
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(DisplayPengaduan.this,
                 recyclerView, new RecyclerTouchListener.ClickListener() {
             @Override
@@ -72,20 +89,23 @@ public class DisplayPengaduan extends AppCompatActivity {
 
                 if (Config.CEK_KONEKSI(DisplayPengaduan.this)) {
                     ModelTaskPengaduan modalTask = modalTaskList.get(position);
+
+                    final String kdUser = modalTask.getKdUser();
+                    final String kdKamar = modalTask.getKdKamar();
+                    final String noKamar = modalTask.getNoKamar();
+                    final String blokKamar = modalTask.getBlokKamar();
+                    final String keluhan = modalTask.getKeluhan();
+                    final String kdKeluhan = modalTask.getKdKeluhan();
+                    final String nama = modalTask.getNama();
+                    final String image = modalTask.getImage();
+
                     if ((strLevelUser.equals("2") && modalTask.getStatusKeluhan().equals("Menunggu")) || (strLevelUser.equals("1") && !modalTask.getStatusKeluhan().equals("Selesai"))) {
                         if (!modalTask.getKdUser().equals("0")) {
-                            final String kdUser = modalTask.getKdUser();
-                            final String kdKamar = modalTask.getKdKamar();
-                            final String noKamar = modalTask.getNoKamar();
-                            final String blokKamar = modalTask.getBlokKamar();
-                            final String keluhan = modalTask.getKeluhan();
-                            final String kdKeluhan = modalTask.getKdKeluhan();
-                            final String nama = modalTask.getNama();
 
                             if( strLevelUser.equals("1")) {
                                 if(modalTask.getStatusKeluhan().equals("Menunggu")) {
 
-                                    final CharSequence[] dialogitem = {"- Proses Keluhan"};
+                                    final CharSequence[] dialogitem = {"- Proses Keluhan", "- View Image Complain"};
                                     dialog = new AlertDialog.Builder(DisplayPengaduan.this);
                                     dialog.setCancelable(true);
                                     //dialog.setTitle("Keluhan");
@@ -93,108 +113,17 @@ public class DisplayPengaduan extends AppCompatActivity {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
                                             // TODO Auto-generated method stub
-                                            switch (which) {
-                                                case 0:
-                                                    if (Config.CEK_KONEKSI(DisplayPengaduan.this)) {
-                                                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(DisplayPengaduan.this);
-                                                        alertDialogBuilder.setMessage("Proses keluhan?");
-                                                        alertDialogBuilder.setCancelable(false);
-                                                        alertDialogBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                                                            @Override
-                                                            public void onClick(DialogInterface arg0, int arg1) {
-                                                                //Back to Login.class
-                                                                btnProsesKeluhan(kdKeluhan, "Proses");
-                                                                //Toast.makeText(DisplayPengaduan.this, "proses keluhan", Toast.LENGTH_SHORT).show();
-                                                            }
-                                                        });
-
-                                                        alertDialogBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                                                            @Override
-                                                            public void onClick(DialogInterface arg0, int arg1) {
-                                                            }
-                                                        });
-
-                                                        //Showing the alert dialog
-                                                        AlertDialog alertDialog = alertDialogBuilder.create();
-                                                        alertDialog.show();
-
-                                                    } else {
-                                                        //Snackbar.make(recyclerView, Config.ALERT_MESSAGE_NO_CONN, Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                                                        Toast.makeText(DisplayPengaduan.this, Config.ALERT_MESSAGE_NO_CONN, Toast.LENGTH_SHORT).show();
-                                                    }
-                                                    break;
-
-                                            }
-                                        }
-                                    }).show();
-                                } else {
-                                    final CharSequence[] dialogitem = {"- Keluhan Selesai"};
-                                    dialog = new AlertDialog.Builder(DisplayPengaduan.this);
-                                    dialog.setCancelable(true);
-                                    //dialog.setTitle("Keluhan");
-                                    dialog.setItems(dialogitem, new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            // TODO Auto-generated method stub
-                                            switch (which) {
-
-                                                case 0:
-                                                    if (Config.CEK_KONEKSI(DisplayPengaduan.this)) {
-                                                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(DisplayPengaduan.this);
-                                                        alertDialogBuilder.setMessage("Keluhan selesai?");
-                                                        alertDialogBuilder.setCancelable(false);
-                                                        alertDialogBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                                                            @Override
-                                                            public void onClick(DialogInterface arg0, int arg1) {
-                                                                //Back to Login.class
-                                                                btnProsesKeluhan(kdKeluhan, "Selesai");
-                                                                //Toast.makeText(DisplayPengaduan.this, "keluhan selesai", Toast.LENGTH_SHORT).show();
-                                                            }
-                                                        });
-
-                                                        alertDialogBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                                                            @Override
-                                                            public void onClick(DialogInterface arg0, int arg1) {
-                                                            }
-                                                        });
-
-                                                        //Showing the alert dialog
-                                                        AlertDialog alertDialog = alertDialogBuilder.create();
-                                                        alertDialog.show();
-
-                                                    } else {
-                                                        //Snackbar.make(recyclerView, Config.ALERT_MESSAGE_NO_CONN, Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                                                        Toast.makeText(DisplayPengaduan.this, Config.ALERT_MESSAGE_NO_CONN, Toast.LENGTH_SHORT).show();
-                                                    }
-                                                    break;
-
-                                            }
-                                        }
-                                    }).show();
-                                }
-
-                            }else{
-
-                                final CharSequence[] dialogitem = {"- Delete Keluhan"};
-                                dialog = new AlertDialog.Builder(DisplayPengaduan.this);
-                                dialog.setCancelable(true);
-                                //dialog.setTitle("Keluhan");
-                                dialog.setItems(dialogitem, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        // TODO Auto-generated method stub
-                                        switch (which) {
-                                            case 0:
+                                            if (which == 0) {
                                                 if (Config.CEK_KONEKSI(DisplayPengaduan.this)) {
                                                     AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(DisplayPengaduan.this);
-                                                    alertDialogBuilder.setMessage("Are you sure to delete?");
+                                                    alertDialogBuilder.setMessage("Proses keluhan?");
                                                     alertDialogBuilder.setCancelable(false);
                                                     alertDialogBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                                         @Override
                                                         public void onClick(DialogInterface arg0, int arg1) {
                                                             //Back to Login.class
-                                                            btnDelete(kdKeluhan);
-                                                            //Toast.makeText(DisplayPengaduan.this, blokKamar, Toast.LENGTH_SHORT).show();
+                                                            btnProsesKeluhan(kdKeluhan, "Proses");
+                                                            //Toast.makeText(DisplayPengaduan.this, "proses keluhan", Toast.LENGTH_SHORT).show();
                                                         }
                                                     });
 
@@ -212,8 +141,100 @@ public class DisplayPengaduan extends AppCompatActivity {
                                                     //Snackbar.make(recyclerView, Config.ALERT_MESSAGE_NO_CONN, Snackbar.LENGTH_LONG).setAction("Action", null).show();
                                                     Toast.makeText(DisplayPengaduan.this, Config.ALERT_MESSAGE_NO_CONN, Toast.LENGTH_SHORT).show();
                                                 }
-                                                break;
+                                            }else{
+                                                imagePopup.initiatePopupWithPicasso(image);
+                                                imagePopup.viewPopup();
+                                            }
+                                        }
+                                    }).show();
+                                } else {
+                                    final CharSequence[] dialogitem = {"- Keluhan Selesai","- View Image Complain"};
+                                    dialog = new AlertDialog.Builder(DisplayPengaduan.this);
+                                    dialog.setCancelable(true);
+                                    //dialog.setTitle("Keluhan");
+                                    dialog.setItems(dialogitem, new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            // TODO Auto-generated method stub
+                                            if (which == 0) {
+                                                if (Config.CEK_KONEKSI(DisplayPengaduan.this)) {
+                                                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(DisplayPengaduan.this);
+                                                    alertDialogBuilder.setMessage("Keluhan selesai?");
+                                                    alertDialogBuilder.setCancelable(false);
+                                                    alertDialogBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(DialogInterface arg0, int arg1) {
+                                                            //Back to Login.class
+                                                            btnProsesKeluhan(kdKeluhan, "Selesai");
+                                                            //Toast.makeText(DisplayPengaduan.this, "keluhan selesai", Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    });
 
+                                                    alertDialogBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(DialogInterface arg0, int arg1) {
+                                                        }
+                                                    });
+
+                                                    //Showing the alert dialog
+                                                    AlertDialog alertDialog = alertDialogBuilder.create();
+                                                    alertDialog.show();
+
+                                                } else {
+                                                    //Snackbar.make(recyclerView, Config.ALERT_MESSAGE_NO_CONN, Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                                                    Toast.makeText(DisplayPengaduan.this, Config.ALERT_MESSAGE_NO_CONN, Toast.LENGTH_SHORT).show();
+                                                }
+                                            }else{
+                                                imagePopup.initiatePopupWithPicasso(image);
+                                                imagePopup.viewPopup();
+                                            }
+                                        }
+                                    }).show();
+                                }
+
+                            }else{
+
+                                final CharSequence[] dialogitem = {"- Delete Keluhan","- View Image Complain"};
+                                dialog = new AlertDialog.Builder(DisplayPengaduan.this);
+                                dialog.setCancelable(true);
+                                //dialog.setTitle("Keluhan");
+                                dialog.setItems(dialogitem, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        // TODO Auto-generated method stub
+                                        if (which == 0) {
+                                            if (Config.CEK_KONEKSI(DisplayPengaduan.this)) {
+                                                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(DisplayPengaduan.this);
+                                                alertDialogBuilder.setMessage("Are you sure to delete?");
+                                                alertDialogBuilder.setCancelable(false);
+                                                alertDialogBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface arg0, int arg1) {
+                                                        //Back to Login.class
+                                                        btnDelete(kdKeluhan);
+                                                        //Toast.makeText(DisplayPengaduan.this, blokKamar, Toast.LENGTH_SHORT).show();
+                                                    }
+                                                });
+
+                                                alertDialogBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface arg0, int arg1) {
+                                                    }
+                                                });
+
+                                                //Showing the alert dialog
+                                                AlertDialog alertDialog = alertDialogBuilder.create();
+                                                alertDialog.show();
+
+                                            } else {
+                                                //Snackbar.make(recyclerView, Config.ALERT_MESSAGE_NO_CONN, Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                                                Toast.makeText(DisplayPengaduan.this, Config.ALERT_MESSAGE_NO_CONN, Toast.LENGTH_SHORT).show();
+                                            }
+                                        }else{
+                                            //Toast.makeText(DisplayPengaduan.this, image, Toast.LENGTH_SHORT).show();
+
+                                            imagePopup.initiatePopupWithPicasso(image);
+                                            imagePopup.viewPopup();
                                         }
                                     }
                                 }).show();
@@ -223,6 +244,27 @@ public class DisplayPengaduan extends AppCompatActivity {
                             //Snackbar.make(view, modalTask.getBlokKamar(), Snackbar.LENGTH_LONG).setAction("Action", null).show();
                         }
 
+                    }else{
+                        final CharSequence[] dialogitem = {"- View Image Complain"};
+                        dialog = new AlertDialog.Builder(DisplayPengaduan.this);
+                        dialog.setCancelable(true);
+                        //dialog.setTitle("Keluhan");
+                        dialog.setItems(dialogitem, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                // TODO Auto-generated method stub
+                                if (which == 0) {
+                                    if (Config.CEK_KONEKSI(DisplayPengaduan.this)) {
+                                        imagePopup.initiatePopupWithPicasso(image);
+                                        imagePopup.viewPopup();
+
+                                    } else {
+                                        //Snackbar.make(recyclerView, Config.ALERT_MESSAGE_NO_CONN, Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                                        Toast.makeText(DisplayPengaduan.this, Config.ALERT_MESSAGE_NO_CONN, Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            }
+                        }).show();
                     }
                 } else {
                     Toast.makeText(DisplayPengaduan.this, Config.ALERT_MESSAGE_CONN_ERROR, Toast.LENGTH_SHORT).show();
@@ -247,7 +289,8 @@ public class DisplayPengaduan extends AppCompatActivity {
             public void onRefresh() {
                 if (Config.CEK_KONEKSI(DisplayPengaduan.this)) {
                     modalTaskList.clear();
-                    getJSON();
+                    searchPublic="";
+                    getJSON(searchPublic);
                     mSwipeRefreshLayout.setRefreshing(false);
                 } else {
                     modalTaskList.clear();
@@ -259,7 +302,8 @@ public class DisplayPengaduan extends AppCompatActivity {
         });
 
         if (Config.CEK_KONEKSI(DisplayPengaduan.this)) {
-            getJSON();
+            searchPublic="";
+            getJSON(searchPublic);
         } else {
             //onCreateDialog(tampil_error);
             //recyclerView.setBackgroundResource(R.drawable.ic_offline_black_24dp);
@@ -271,7 +315,7 @@ public class DisplayPengaduan extends AppCompatActivity {
     private void btnProsesKeluhan(final String kdKeluhan, final String statusKeluhan) {
         @SuppressLint("StaticFieldLeak")
         class getJSONDel extends AsyncTask<Void, Void, String> {
-            ProgressDialog loading;
+            private ProgressDialog loading;
 
             @Override
             protected void onPreExecute() {
@@ -287,7 +331,8 @@ public class DisplayPengaduan extends AppCompatActivity {
 
                 modalTaskList.clear();
                 //String stringOfDate = "";
-                getJSON();
+                searchPublic="";
+                getJSON(searchPublic);
             }
 
             @Override
@@ -298,8 +343,7 @@ public class DisplayPengaduan extends AppCompatActivity {
                 params.put(Config.DISP_KD_TOMBOL, statusKeluhan);
 
                 RequestHandler rh = new RequestHandler();
-                String res = rh.sendPostRequest(Config.URL_ACTION_KELUHAN, params);
-                return res;
+                return rh.sendPostRequest(Config.URL_ACTION_KELUHAN, params);
             }
         }
 
@@ -310,7 +354,7 @@ public class DisplayPengaduan extends AppCompatActivity {
     private void btnDelete(final String kdKeluhan) {
         @SuppressLint("StaticFieldLeak")
         class getJSONDel extends AsyncTask<Void, Void, String> {
-            ProgressDialog loading;
+            private ProgressDialog loading;
 
             @Override
             protected void onPreExecute() {
@@ -326,7 +370,8 @@ public class DisplayPengaduan extends AppCompatActivity {
 
                 modalTaskList.clear();
                 //String stringOfDate = "";
-                getJSON();
+                searchPublic = "";
+                getJSON(searchPublic);
             }
 
             @Override
@@ -337,8 +382,7 @@ public class DisplayPengaduan extends AppCompatActivity {
                 params.put(Config.DISP_KD_TOMBOL, "delete");
 
                 RequestHandler rh = new RequestHandler();
-                String res = rh.sendPostRequest(Config.URL_ACTION_KELUHAN, params);
-                return res;
+                return rh.sendPostRequest(Config.URL_ACTION_KELUHAN, params);
             }
         }
 
@@ -346,7 +390,7 @@ public class DisplayPengaduan extends AppCompatActivity {
         aw.execute();
     }
 
-    private void getJSON() {
+    private void getJSON(final String search) {
         @SuppressLint("StaticFieldLeak")
         class GetJSON extends AsyncTask<Void, Void, String> {
             private ProgressDialog loading;
@@ -372,10 +416,10 @@ public class DisplayPengaduan extends AppCompatActivity {
                 params.put(Config.DISP_KD_KAMAR, strKdKamar);
                 params.put(Config.DISP_KD_TOMBOL, strKdTombol);
                 params.put(Config.DISP_LEVEL_USER, strLevelUser);
+                params.put(Config.KEY_SEARCH, search);
 
                 RequestHandler rh = new RequestHandler();
-                String res = rh.sendPostRequest(Config.URL_GET_KELUHAN, params);
-                return res;
+                return rh.sendPostRequest(Config.URL_GET_KELUHAN, params);
             }
         }
         GetJSON gj = new GetJSON();
@@ -403,8 +447,9 @@ public class DisplayPengaduan extends AppCompatActivity {
                 String keluhan = jo.getString(Config.DISP_KELUHAN);
                 String tanggalKeluhan = jo.getString(Config.DISP_TANGGAL_KELUHAN);
                 String statusKeluhan = jo.getString(Config.DISP_STATUS_KELUHAN);
+                String image = jo.getString(Config.DISP_IMAGE);
 
-                ModelTaskPengaduan modalTask = new ModelTaskPengaduan(nomor, kdUser, kdKamar, kdKeluhan, blokKamar, noKamar, nama, keluhan, tanggalKeluhan, statusKeluhan);
+                ModelTaskPengaduan modalTask = new ModelTaskPengaduan(nomor, kdUser, kdKamar, kdKeluhan, blokKamar, noKamar, nama, keluhan, tanggalKeluhan, statusKeluhan, image);
                 modalTaskList.add(modalTask);
 
             }
@@ -422,14 +467,41 @@ public class DisplayPengaduan extends AppCompatActivity {
     //controll tombol toolbar
     @Override
     public boolean onOptionsItemSelected(MenuItem menuItem) {
-        switch (menuItem.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-
-            default:
-                return super.onOptionsItemSelected(menuItem);
+        if (menuItem.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
         }
+        return super.onOptionsItemSelected(menuItem);
+    }
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_search, menu);
+        MenuItem searchItem = menu.findItem(R.id.search);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String search) {
+                //Toast.makeText(ListCity.this, search, Toast.LENGTH_SHORT).show();
+                if (Config.CEK_KONEKSI(DisplayPengaduan.this)) {
+                    modalTaskList.clear();
+                    searchPublic = search;
+                    getJSON(searchPublic);
+                    mSwipeRefreshLayout.setRefreshing(false);
+                    searchView.clearFocus();
+                } else {
+                    mSwipeRefreshLayout.setRefreshing(false);
+                    showDialog(Config.TAMPIL_ERROR);
+                }
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+        return super.onCreateOptionsMenu(menu);
     }
 
 }

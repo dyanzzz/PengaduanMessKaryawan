@@ -7,12 +7,16 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
@@ -30,6 +34,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DisplayKamar extends AppCompatActivity {
 
@@ -38,6 +43,7 @@ public class DisplayKamar extends AppCompatActivity {
     private String JSON_STRING;
     SwipeRefreshLayout mSwipeRefreshLayout;
     AlertDialog.Builder dialog;
+    public String searchPublic = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +51,7 @@ public class DisplayKamar extends AppCompatActivity {
         setContentView(R.layout.activity_display_kamar);
 
         ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
         actionBar.setHomeButtonEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
@@ -144,12 +151,14 @@ public class DisplayKamar extends AppCompatActivity {
         mSwipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
 
+
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 if(Config.CEK_KONEKSI(DisplayKamar.this)) {
                     modalTaskList.clear();
-                    getJSON();
+                    searchPublic = "";
+                    getJSON(searchPublic);
                     mSwipeRefreshLayout.setRefreshing(false);
                 }else{
                     modalTaskList.clear();
@@ -161,7 +170,8 @@ public class DisplayKamar extends AppCompatActivity {
         });
 
         if(Config.CEK_KONEKSI(DisplayKamar.this)) {
-            getJSON();
+            searchPublic = "";
+            getJSON(searchPublic);
         } else {
             //onCreateDialog(tampil_error);
             //recyclerView.setBackgroundResource(R.drawable.ic_offline_black_24dp);
@@ -173,7 +183,7 @@ public class DisplayKamar extends AppCompatActivity {
     private void btnDelete(final String kdUser) {
         @SuppressLint("StaticFieldLeak")
         class getJSONDel extends AsyncTask<Void, Void, String> {
-            ProgressDialog loading;
+            private ProgressDialog loading;
 
             @Override
             protected void onPreExecute() {
@@ -189,7 +199,8 @@ public class DisplayKamar extends AppCompatActivity {
 
                 modalTaskList.clear();
                 //String stringOfDate = "";
-                getJSON();
+                searchPublic = "";
+                getJSON(searchPublic);
             }
 
             @Override
@@ -200,8 +211,7 @@ public class DisplayKamar extends AppCompatActivity {
                 params.put(Config.DISP_KD_TOMBOL, "delete");
 
                 RequestHandler rh = new RequestHandler();
-                String res = rh.sendPostRequest(Config.URL_ACTION_KAMAR, params);
-                return res;
+                return rh.sendPostRequest(Config.URL_ACTION_KAMAR, params);
             }
         }
 
@@ -209,7 +219,7 @@ public class DisplayKamar extends AppCompatActivity {
         aw.execute();
     }
 
-    private void getJSON(){
+    private void getJSON(final String search){
         @SuppressLint("StaticFieldLeak")
         class GetJSON extends AsyncTask<Void, Void, String> {
             private ProgressDialog loading;
@@ -230,10 +240,10 @@ public class DisplayKamar extends AppCompatActivity {
 
             protected String doInBackground(Void... v) {
                 HashMap<String, String> params = new HashMap<>();
+                params.put(Config.KEY_SEARCH, search);
 
                 RequestHandler rh = new RequestHandler();
-                String res = rh.sendPostRequest(Config.URL_GET_KAMAR, params);
-                return res;
+                return rh.sendPostRequest(Config.URL_GET_KAMAR, params);
             }
         }
         GetJSON gj = new GetJSON();
@@ -276,13 +286,40 @@ public class DisplayKamar extends AppCompatActivity {
     //controll tombol toolbar
     @Override
     public boolean onOptionsItemSelected(MenuItem menuItem) {
-        switch (menuItem.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-
-            default:
-                return super.onOptionsItemSelected(menuItem);
+        if (menuItem.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
         }
+        return super.onOptionsItemSelected(menuItem);
+    }
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_search, menu);
+        MenuItem searchItem = menu.findItem(R.id.search);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String search) {
+                //Toast.makeText(ListCity.this, search, Toast.LENGTH_SHORT).show();
+                if (Config.CEK_KONEKSI(DisplayKamar.this)) {
+                    modalTaskList.clear();
+                    searchPublic = search;
+                    getJSON(searchPublic);
+                    mSwipeRefreshLayout.setRefreshing(false);
+                    searchView.clearFocus();
+                } else {
+                    mSwipeRefreshLayout.setRefreshing(false);
+                    showDialog(Config.TAMPIL_ERROR);
+                }
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+        return super.onCreateOptionsMenu(menu);
     }
 }

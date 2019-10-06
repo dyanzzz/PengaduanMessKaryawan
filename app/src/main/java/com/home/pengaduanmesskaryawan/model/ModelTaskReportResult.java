@@ -1,12 +1,12 @@
 package com.home.pengaduanmesskaryawan.model;
 
-public class ModelTaskPengaduan {
+public class ModelTaskReportResult {
     private String nomor, kdUser, kdKamar, kdKeluhan, blokKamar, noKamar, nama, keluhan, tanggalKeluhan, statusKeluhan, image;
 
-    public ModelTaskPengaduan() {
+    public ModelTaskReportResult() {
     }
 
-    public ModelTaskPengaduan(String nomor, String kdUser, String kdKamar, String kdKeluhan, String blokKamar, String noKamar,
+    public ModelTaskReportResult(String nomor, String kdUser, String kdKamar, String kdKeluhan, String blokKamar, String noKamar,
                               String nama, String keluhan, String tanggalKeluhan, String statusKeluhan, String image) {
         this.nomor          = nomor;
         this.kdUser         = kdUser;

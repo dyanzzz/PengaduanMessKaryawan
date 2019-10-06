@@ -112,6 +112,7 @@
                 android:layout_height="wrap_content"
                 android:editable="false"
                 android:gravity="start"
+                android:drawableEnd="@drawable/ic_date_gray_24dp"
                 android:hint="*"
                 android:padding="10dp" />
 

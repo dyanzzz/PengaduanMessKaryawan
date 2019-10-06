@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/toolbar_select_all"
+        android:icon="@drawable/select_all"
+        android:orderInCategory="100"
+        android:title="@string/app_name"
+        app:showAsAction="ifRoom" />
+
+</menu>

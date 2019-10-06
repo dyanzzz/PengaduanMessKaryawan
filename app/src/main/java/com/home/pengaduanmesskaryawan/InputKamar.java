@@ -4,18 +4,24 @@ import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Base64;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,6 +34,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.HashMap;
 
@@ -38,6 +47,7 @@ public class InputKamar extends AppCompatActivity {
     EditText blokKamar, noKamar, username, password, nama, tanggalLahir, alamat, jenisKelamin;
     Button btnSave, btnCancel;
     Switch showHidePassword;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +76,7 @@ public class InputKamar extends AppCompatActivity {
         btnSave         = findViewById(R.id.btnSave);
         btnCancel       = findViewById(R.id.btnCancel);
 
+
         showHidePassword    = findViewById(R.id.showHidePassword);
         showHidePassword.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -78,6 +89,8 @@ public class InputKamar extends AppCompatActivity {
                 password.setSelection(password.getText().length());
             }
         });
+
+
 
         if(Config.CEK_KONEKSI(InputKamar.this)) {
 

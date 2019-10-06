@@ -1,0 +1,206 @@
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cardView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="10dp"
+    app:cardCornerRadius="5dp"
+    tools:context=".Report">
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+
+            <TextView
+                android:id="@+id/textView_blokKamar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="5dp"
+                android:text="Blok Kamar" />
+
+
+            <EditText
+                android:id="@+id/blokKamar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableEnd="@android:drawable/ic_menu_more"
+                android:editable="false"
+                android:gravity="start"
+                android:onClick="onClick"
+                android:hint="*"
+                android:padding="10dp" />
+
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="5dp"
+                android:text="User" />
+
+            <EditText
+                android:id="@+id/user"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableEnd="@android:drawable/ic_menu_more"
+                android:editable="false"
+                android:gravity="start"
+                android:onClick="onClick"
+                android:hint="*"
+                android:padding="10dp" />
+
+            <EditText
+                android:id="@+id/kdUser"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:editable="false"
+                tools:visibility="visible" />
+
+            <EditText
+                android:id="@+id/kdKamar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:editable="false"
+                tools:visibility="visible" />
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/textView5"
+                    android:layout_width="160dp"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="5dp"
+                    android:text="From" />
+
+                <TextView
+                    android:id="@+id/textView6"
+                    android:layout_width="160dp"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@+id/textView5"
+                    android:paddingTop="5dp"
+                    android:text="To" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <EditText
+                    android:id="@+id/from"
+                    android:layout_width="160dp"
+                    android:layout_height="wrap_content"
+                    android:drawableEnd="@drawable/ic_date_gray_24dp"
+                    android:editable="false"
+                    android:gravity="start"
+                    android:onClick="onClick"
+                    android:hint="*"
+                    android:padding="10dp" />
+
+                <EditText
+                    android:id="@+id/to"
+                    android:layout_width="160dp"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@+id/from"
+                    android:drawableEnd="@drawable/ic_date_gray_24dp"
+                    android:editable="false"
+                    android:gravity="start"
+                    android:onClick="onClick"
+                    android:hint="*"
+                    android:padding="10dp" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/layoutStatusKeluhan"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:gravity="center_vertical|center_horizontal"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textView8"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="5dp"
+                    android:text="Status Keluhan : " />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:orientation="horizontal">
+
+                    <RadioGroup
+                        android:id="@+id/radio"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <RadioButton
+                            android:id="@+id/radioButton1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@drawable/shape_rectangle_round_white"
+                            android:text="Menunggu"
+                            android:checked="true"
+                            android:textColor="@android:color/holo_red_dark" />
+
+                        <RadioButton
+                            android:id="@+id/radioButton2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:layout_marginEnd="5dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/shape_rectangle_round_white"
+                            android:text="Proses"
+                            android:textColor="@android:color/holo_blue_dark" />
+
+                        <RadioButton
+                            android:id="@+id/radioButton3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@drawable/shape_rectangle_round_white"
+                            android:text="Selesai"
+                            android:textColor="@color/colorPrimary" />
+                    </RadioGroup>
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorGray" />
+
+            <Button
+                android:id="@+id/btnReport"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/shape_rectangle_round_primary"
+                android:onClick="onClick"
+                android:paddingLeft="10dp"
+                android:text="Display Report"
+                android:textColor="@android:color/white" />
+
+
+        </LinearLayout>
+    </ScrollView>
+
+</android.support.v7.widget.CardView>

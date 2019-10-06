@@ -1,4 +1,5 @@
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/cardView"
@@ -7,6 +8,12 @@
     android:layout_margin="10dp"
     app:cardCornerRadius="5dp"
     tools:context=".InputKamar">
+
+    <!--
+    xmlns:android="<a class='vglnk' href='http://schemas.android.com/apk/res/android' rel='nofollow'><span>http</span><span>://</span><span>schemas</span><span>.</span><span>android</span><span>.</span><span>com</span><span>/</span><span>apk</span><span>/</span><span>res</span><span>/</span><span>android</span></a>"
+    xmlns:app="<a class='vglnk' href='http://schemas.android.com/apk/res-auto' rel='nofollow'><span>http</span><span>://</span><span>schemas</span><span>.</span><span>android</span><span>.</span><span>com</span><span>/</span><span>apk</span><span>/</span><span>res</span><span>-</span><span>auto</span></a>"
+    xmlns:tools="<a class='vglnk' href='http://schemas.android.com/tools' rel='nofollow'><span>http</span><span>://</span><span>schemas</span><span>.</span><span>android</span><span>.</span><span>com</span><span>/</span><span>tools</span></a>"
+    -->
 
     <ScrollView
         android:layout_width="fill_parent"
@@ -23,7 +30,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingBottom="5dp"
-                android:text="Tambah Data Kamar"
+                android:text="@string/tambah_data_kamar"
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
@@ -36,6 +43,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
+
                 <TextView
                     android:id="@+id/textView_blokKamar"
                     android:layout_width="170dp"
@@ -47,8 +55,8 @@
                     android:id="@+id/textView_noKamar"
                     android:layout_width="170dp"
                     android:layout_height="wrap_content"
-                    android:paddingTop="5dp"
                     android:layout_toEndOf="@+id/textView_blokKamar"
+                    android:paddingTop="5dp"
                     android:text="No. Kamar" />
             </RelativeLayout>
 
@@ -78,8 +86,6 @@
             </RelativeLayout>
 
 
-
-
             <TextView
                 android:id="@+id/textView2"
                 android:layout_width="match_parent"
@@ -95,8 +101,6 @@
                 android:hint="*"
                 android:inputType="textShortMessage"
                 android:padding="10dp" />
-
-
 
 
             <TextView
@@ -131,8 +135,6 @@
             </RelativeLayout>
 
 
-
-
             <TextView
                 android:id="@+id/textView4"
                 android:layout_width="match_parent"
@@ -148,8 +150,6 @@
                 android:hint="*"
                 android:inputType="text"
                 android:padding="10dp" />
-
-
 
 
             <TextView
@@ -171,8 +171,6 @@
                 android:padding="10dp" />
 
 
-
-
             <TextView
                 android:id="@+id/textView6"
                 android:layout_width="match_parent"
@@ -189,11 +187,6 @@
                 android:hint="*"
                 android:inputType="text"
                 android:padding="10dp" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/colorGray" />
 
 
             <TextView
@@ -217,7 +210,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@color/colorGray" />
-
 
             <LinearLayout
                 android:layout_width="match_parent"

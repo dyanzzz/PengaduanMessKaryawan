@@ -24,6 +24,16 @@
     <string name="edit_profil">Edit Profil</string>
 
     <string name="pilih_jenis_kelamin">*</string>
+    <string name="search">Search</string>
+    <string name="choose_image">* Choose Image</string>
+    <string name="tambah_data_kamar">Tambah Data Kamar</string>
+    <string name="report">Report</string>
+    <string name="nomor">No.</string>
+    <string name="blok_kamar">Blok kamar</string>
+    <string name="user">User</string>
+    <string name="listUser">List User</string>
+    <string name="listBlokKamar">List Blok Kamar</string>
+    <string name="reportResult">Report Result</string>
     <string-array name="jenis_kelamin">
         <item>Laki-laki</item>
         <item>Perempuan</item>
